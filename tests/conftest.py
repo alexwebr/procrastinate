@@ -124,8 +124,10 @@ def not_opened_sync_psycopg_connector(psycopg_connection_params):
 @pytest.fixture
 async def psycopg_connector(not_opened_psycopg_connector):
     await not_opened_psycopg_connector.open_async()
+    not_opened_psycopg_connector.get_sync_connector().open()
     yield not_opened_psycopg_connector
     await not_opened_psycopg_connector.close_async()
+    not_opened_psycopg_connector.get_sync_connector().close()
 
 
 @pytest.fixture

@@ -100,11 +100,9 @@ class PsycopgConnector(connector.BaseAsyncConnector):
         self._sync_connector: connector.BaseConnector | None = None
 
     def get_sync_connector(self) -> connector.BaseConnector:
-        if self._async_pool:
-            return self
         if self._sync_connector is None:
             logger.debug(
-                "PsycopgConnector used synchronously before being opened. "
+                "PsycopgConnector used synchronously. "
                 "Creating a SyncPsycopgConnector."
             )
             self._sync_connector = sync_psycopg_connector.SyncPsycopgConnector(
@@ -134,11 +132,6 @@ class PsycopgConnector(connector.BaseAsyncConnector):
         """
         if self._async_pool:
             return
-
-        if self._sync_connector is not None:
-            logger.debug("Closing automatically created SyncPsycopgConnector.")
-            await utils.sync_to_async(self._sync_connector.close)
-            self._sync_connector = None
 
         if pool:
             self._pool_externally_set = True

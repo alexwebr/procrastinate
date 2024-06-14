@@ -219,8 +219,8 @@ async def test_loop_notify_timeout(psycopg_connector):
     assert not event.is_set()
 
 
-async def test_get_sync_connector__open(psycopg_connector):
-    assert psycopg_connector.get_sync_connector() is psycopg_connector
+async def test_get_sync_connector__open(psycopg_connector, sync_psycopg_connector):
+    assert psycopg_connector.get_sync_connector().__class__ == sync_psycopg_connector.__class__
     await psycopg_connector.close_async()
 
 
